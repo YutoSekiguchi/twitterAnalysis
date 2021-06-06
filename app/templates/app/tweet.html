@@ -1,0 +1,115 @@
+{% extends 'app/base.html' %}
+
+{% block content %}
+
+<h5 class="mb-3">API制限回数：<span class="text-danger">{{ limit }}</span></h5>
+
+<h4 class="mb-3">検索キーワード「{{ keyword }}」</h4>
+
+<h4 class="mb-3">投稿機能</h4>
+<div class="card p-3 mb-3">
+  <canvas id="tweet_chart" height="400"></canvas>
+</div>
+
+<h4 class="mb-3">検索結果</h4>
+
+{% for index, row in tweet_data.iterrows %}
+<div class="card mb-2">
+  <div class="card-body">
+    <div class="d-flex align-items-center mv-2">
+      <img src="{{ row.profile_image_url }}" alt="" class="rounded-circle mr-3">
+      <span><b>{{ row.name }}</b></span>
+      <span>@{{ row.screen_name }}</span>
+    </div>
+    {% if row.media_url %}
+      <img src="{{ row.media_url }}" alt="" class="media-img">
+    {% endif %}
+    <p>{{ row.full_text|linebreaksbr}}</p>
+    <div class="d-flex align-items-center mb-2">
+      <div class="mr-3">
+        <i class="fas fa-retweet"></i>
+        <span>:{{ row.retweet_count }}</span>
+      </div>
+      <div class="">
+        <i class="far fa-heart"></i>
+        <span>:{{ row.favorite_count }}</span>
+      </div>
+    </div>
+    <div class="">{{ row.created_at }}</div>
+  </div>
+</div>
+{% endfor %}
+
+{% endblock %}
+
+{% block extra_js %}
+<script>
+  const graph_data = JSON.parse('{{ graph_data|safe }}');
+  const tweet_ctx = document.getElementById('tweet_chart');
+  const tweet = new Chart(tweet_ctx, {
+    type: 'bar',
+    data: {
+      labels: graph_data.date,
+      datasets: [
+        {
+          label: 'いいね数',
+          type: 'line',
+          data: graph_data.favorite_data,
+          borderColor: 'rgba(207, 46, 146, 0.5)',
+          backgroundColor: 'rgba(0, 0, 0, 0)',
+          yAxisID: 'graph1',
+        },
+        {
+          label: 'リツイート数',
+          type: 'line',
+          data: graph_data.retweet_data,
+          borderColor: 'rgba(0, 138, 190, 0.5)',
+          backgroundColor: 'rgba(0, 0, 0, 0)',
+          yAxisID: 'graph1',
+        },
+        {
+          label: '投稿数',
+          type: 'line',
+          data: graph_data.post_data,
+          borderColor: 'rgba(207, 105, 57)',
+          backgroundColor: 'rgba(207, 105, 57, 0.5)',
+          yAxisID: 'graph2',
+        }
+      ]
+    },
+    options: {
+      elements: {
+        line: {
+          tension: 0
+        }
+      },
+      tooltips: {
+        mode: 'nearest',
+        intersect: false
+      },
+      responsive: true,
+      scales: {
+        yAxes: [
+          {
+            id: 'graph1',
+            type: 'linear',
+            position: 'left'
+          },
+          {
+            id: 'graph2',
+            type: 'linear',
+            position: 'right',
+            ticks: {
+              min: 0,
+              stepSize: 5
+            },
+            gridLines: {
+              drawOnChartArea: false
+            }
+          }
+        ]
+      }
+    }
+  })
+</script>
+{% endblock %}
