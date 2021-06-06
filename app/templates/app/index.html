@@ -1,0 +1,63 @@
+{% extends "app/base.html" %}
+{% load widget_tweaks %}
+
+{% block content %}
+
+<div class="my-4">
+  <h2>キーワード検索</h2>
+</div>
+
+<div class="table-responsive search-table">
+  <table class="table">
+    <form method="POST">
+      {% csrf_token %}
+      <tr>
+        <th scope="row">
+          <label for="" class="control-label">検索キーワード</label>
+        </th>
+        <th>
+          {% render_field form.keyword class="form-control" placeholder="キーワードを入力" %}
+        </th>
+      </tr>
+      <tr>
+        <th scope="row">
+          <label for="" class="control-label">検索数</label>
+        </th>
+        <th>
+          {% render_field form.items_count class="form-control" placeholder="検索数" %}
+        </th>
+      </tr>
+      <tr>
+        <th scope="row">
+          <label for="" class="control-label">いいね、リツイート数</label>
+        </th>
+        <th>
+          {% render_field form.rl_count class="form-control" placeholder="いいね、リツイート数" %}
+        </th>
+      </tr>
+      <tr>
+        <th scope="row">
+          <label for="" class="control-label">検索開始日</label>
+        </th>
+        <th>
+          {% render_field form.search_start class="form-control" placeholder="検索開始日" %}
+        </th>
+      </tr>
+      <tr>
+        <th scope="row">
+          <label for="" class="control-label">検索終了日</label>
+        </th>
+        <th>
+          {% render_field form.search_end class="form-control" placeholder="検索終了日" %}
+        </th>
+      </tr>
+      <tr>
+        <td class="text-center" colspan="2">
+          <button class="btn btn-warning" type="submit">検索する</button>
+        </td>
+      </tr>
+    </form>
+  </table>
+</div>
+
+{% endblock %}

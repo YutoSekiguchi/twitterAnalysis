@@ -122,3 +122,13 @@ USE_TZ = True
 STATIC_URL = '/static/'
 
 
+import environ
+import os
+
+env = environ.Env()
+env.read_env(os.path.join(BASE_DIR, '.env'))
+
+CONSUMER_KEY = env('CONSUMER_KEY')
+CONSUMER_SECRET = env('CONSUMER_SECRET')
+ACCESS_KEY = env('ACCESS_KEY')
+ACCESS_KEY_SECRET = env('ACCESS_KEY_SECRET')
